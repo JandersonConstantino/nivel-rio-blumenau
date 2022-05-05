@@ -38,7 +38,7 @@ async function main() {
   const items = ((data && data.niveis) || []).map((item) => ({
     nivel: item.nivel,
     horaLeitura: fns.format(
-      new Date(item.horaLeitura.replace("Z", "")),
+      fns.addHours(new Date(item.horaLeitura.replace("Z", "")), -3),
       "dd/MM/yyyy HH:MM"
     ),
   }));
