@@ -9,14 +9,16 @@ struct Cli {
     /// Exibir últimas medições
     #[arg(short, long)]
     recente: bool,
+
+    /// Desabilitar SSL
+    #[arg(short, long, default_value_t)]
+    unsecure: bool,
 }
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let cli = Cli::parse();
-    println!("recente: {:?}", cli.recente);
-
-    let data = services::river_info_fetcher().await;
+    let data = services::river_info_fetcher(cli.unsecure).await;
 
     match cli.recente {
         true => {
