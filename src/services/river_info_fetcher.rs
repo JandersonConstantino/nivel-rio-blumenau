@@ -19,6 +19,7 @@ struct RiverInfo {
 
 pub async fn river_info_fetcher() -> Vec<NivelItem> {
     let resp = reqwest::Client::builder()
+        // TODO: remove or enable invalid certs using args
         .danger_accept_invalid_certs(true)
         .build()
         .unwrap()
