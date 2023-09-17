@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use crate::utils::{cache_file_exists, get_cache_file, save_cache_file};
+
 const URI: &str = "https://alertablu.blumenau.sc.gov.br/static/data/nivel_oficial.json";
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -28,7 +30,12 @@ pub async fn river_info_fetcher() -> Vec<NivelItem> {
         .await;
 
     let result = match resp {
-        Ok(res) => res.text().await.unwrap(),
+        Ok(res) => {
+            let result = res.text().await.unwrap();
+            save_cache_file(result.clone());
+
+            result
+        }
         Err(error) => {
             // TODO: should verify if has data in cache
             // when cache exists, should transform this message in a warning
@@ -37,7 +44,11 @@ pub async fn river_info_fetcher() -> Vec<NivelItem> {
                 "Erro ao tentar recuperar dados atualizados: {}",
                 error.to_string()
             );
-            String::from("")
+
+            match cache_file_exists() {
+                true => get_cache_file(),
+                _ => String::from(""),
+            }
         }
     };
 
