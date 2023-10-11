@@ -95,7 +95,7 @@ jobs:
         with:
           crate: cargo-deb
           version: latest
-      - run: cargo deb --release
+      - run: cargo deb
       - name: Upload Debian Artifact
         uses: actions/upload-artifact@v2
         with:
