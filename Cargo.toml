@@ -2,6 +2,10 @@
 name = "nivel-rio-blumenau"
 version = "0.1.0"
 edition = "2021"
+authors = ["Janderson Constantino <jandersonconstantino@gmail.com>"]
+license = "MIT"
+description = "CLI para exibir os dados de altura do rio Itajaí em Blumenau, Santa Catarina, Brasil"
+homepage = "https://github.com/JandersonConstantino/nivel-rio-blumenau"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
