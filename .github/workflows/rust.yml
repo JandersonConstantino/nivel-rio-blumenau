@@ -82,3 +82,22 @@ jobs:
         with:
           name: windows
           path: ./*.msi
+
+  release-linux:
+    runs-on: ubuntu-latest
+    needs: [dependency-audit]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - uses: actions-rs/install@v0.1
+        with:
+          crate: cargo-deb
+          version: latest
+      - run: cargo deb --release
+      - name: Upload Debian Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: debian
+          path: ./*.deb
