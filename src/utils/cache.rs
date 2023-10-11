@@ -7,10 +7,7 @@ pub fn save_cache_file(content: String) {
 }
 
 pub fn cache_file_exists() -> bool {
-    match fs::read(TEMPFILE) {
-        Err(_) => false,
-        Ok(_) => true,
-    }
+    fs::read(TEMPFILE).is_ok()
 }
 
 pub fn get_cache_file() -> String {

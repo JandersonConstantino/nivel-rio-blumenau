@@ -31,7 +31,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         }
 
         _ => {
-            if data.len() > 0 {
+            if !data.is_empty() {
                 let item = &data[data.len() - 1];
                 utils::display_river_info(item, &None);
             }

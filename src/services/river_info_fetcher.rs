@@ -39,10 +39,7 @@ pub async fn river_info_fetcher(unsecure: bool) -> Vec<NivelItem> {
             // TODO: should verify if has data in cache
             // when cache exists, should transform this message in a warning
             // else, should be a error em finish the routine.
-            print!(
-                "Erro ao tentar recuperar dados atualizados: {}",
-                error.to_string()
-            );
+            print!("Erro ao tentar recuperar dados atualizados: {}", error);
 
             match cache_file_exists() {
                 true => get_cache_file(),
