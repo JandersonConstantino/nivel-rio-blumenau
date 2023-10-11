@@ -50,7 +50,7 @@ jobs:
 
   dependency-audit:
     runs-on: ubuntu-latest
-    needs: sonar
+    needs: [test, lint]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -64,21 +64,21 @@ jobs:
 
   release-windows:
     runs-on: windows-latest
-  env:
-    RUSTFLAGS: "-C target-feature=+crt-static"
-  name: Windows
-  steps:
-    - uses: actions/checkout@v2
-    - uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-    - uses: actions-rs/install@v0.1
-      with:
-        crate: cargo-wix
-        version: latest
-    - run: cargo wix -v --nocapture -o .
-    - name: Upload MSI Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: windows
-        path: ./*.msi
+    needs: [dependency-audit]
+    env:
+      RUSTFLAGS: "-C target-feature=+crt-static"
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - uses: actions-rs/install@v0.1
+        with:
+          crate: cargo-wix
+          version: latest
+      - run: cargo wix -v --nocapture -o .
+      - name: Upload MSI Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows
+          path: ./*.msi
