@@ -100,4 +100,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: debian
-          path: ./*.deb
+          path: ./target/debian/*.deb
