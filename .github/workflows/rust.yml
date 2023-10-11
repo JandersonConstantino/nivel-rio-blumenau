@@ -19,13 +19,15 @@ jobs:
 
   test:
     runs-on: ubuntu-latest  
+    needs: build
     steps:
     - uses: actions/checkout@v3  
     - name: Run tests
       run: cargo test --verbose
 
   lint:
-    runs-on: ubuntu-latest  
+    runs-on: ubuntu-latest
+    needs: test
     steps:
     - uses: actions/checkout@v3
     - name: lint:clippy
