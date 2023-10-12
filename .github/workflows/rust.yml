@@ -65,10 +65,7 @@ jobs:
   packing-windows:
     runs-on: windows-latest
     needs: [dependency-audit]
-    on:
-      push:
-        branches:
-          - main
+    if: github.ref == 'refs/heads/main'
     env:
       RUSTFLAGS: "-C target-feature=+crt-static"
     steps:
@@ -88,10 +85,7 @@ jobs:
           path: ./*.msi
 
   packing-linux:
-    on:
-      push:
-        branches:
-          - main
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     needs: [dependency-audit]
     steps:
