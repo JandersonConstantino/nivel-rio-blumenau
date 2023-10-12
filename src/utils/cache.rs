@@ -25,16 +25,21 @@ impl Cache {
 
 #[cfg(test)]
 mod tests {
+    use tokio::time::timeout;
+
     use super::*;
-    use std::fs;
+    use std::{fs, time::Duration};
 
     fn delete_temp_file() {
         let _ = fs::remove_file(TEMPFILE);
     }
 
-    #[test]
-    fn exists_should_return_false_when_cache_file_not_exists() {
+    #[tokio::test]
+    async fn exists_should_return_false_when_cache_file_not_exists() {
         delete_temp_file();
+        let timeout_duration = Duration::from_secs(5);
+        let _ = timeout(timeout_duration, async {}).await;
+
         assert!(!Cache::exists());
     }
 
@@ -63,13 +68,15 @@ mod tests {
         assert_eq!(Cache::get(), mocked_content);
     }
 
-    #[test]
-    fn get_save_content() {
+    #[tokio::test]
+    async fn get_save_content() {
         let mocked_content = String::from("My mock content of tempfile");
         delete_temp_file();
 
+        let _ = timeout(Duration::from_secs(5), async {}).await;
         Cache::save(mocked_content.clone());
 
+        let _ = timeout(Duration::from_secs(1), async {}).await;
         assert_eq!(Cache::get(), mocked_content);
     }
 }

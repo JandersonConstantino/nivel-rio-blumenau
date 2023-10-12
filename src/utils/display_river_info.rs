@@ -79,7 +79,7 @@ mod tests {
         #[test]
         fn should_return_empty_string_when_variation_is_zero() {
             let current_level = &1f32;
-            let last_level = &Some(current_level.clone());
+            let last_level = &Some(*current_level);
 
             assert_eq!(
                 DisplayRiverInfo::get_variation(last_level, current_level),

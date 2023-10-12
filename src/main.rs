@@ -15,12 +15,16 @@ struct Cli {
     /// Desabilitar SSL
     #[arg(short, long, default_value_t)]
     unsecure: bool,
+
+    /// URL para sobrescrever a url padrão de busca dos dados
+    #[arg(long)]
+    url: Option<String>,
 }
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let cli = Cli::parse();
-    let data = services::river_info_fetcher(cli.unsecure).await;
+    let data = services::river_info_fetcher(cli.unsecure, cli.url).await;
 
     match cli.recente {
         true => {
