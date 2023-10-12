@@ -35,13 +35,13 @@ mod tests {
     #[test]
     fn exists_should_return_false_when_cache_file_not_exists() {
         delete_temp_file();
-        assert_eq!(Cache::exists(), false);
+        assert!(!Cache::exists());
     }
 
     #[test]
     fn exists_should_return_true_when_cache_file_exists() {
         let _ = fs::write(TEMPFILE, "mock-content");
-        assert_eq!(Cache::exists(), true);
+        assert!(Cache::exists());
 
         delete_temp_file();
     }
