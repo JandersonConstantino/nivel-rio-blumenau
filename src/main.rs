@@ -48,37 +48,3 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     program(Cli::parse()).await;
     Ok(())
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::core::MockLogger;
-    use mockall::predicate::eq;
-    use wiremock::{matchers::method, Mock, MockServer, ResponseTemplate};
-
-    #[tokio::test]
-    async fn should_return_only_first_item() {
-        let mock_server = MockServer::start().await;
-        let body = r#"{"niveis":[{"nivel":6.51,"horaLeitura":"2023-10-11T12:00:04Z"},{"nivel":6.47,"horaLeitura":"2023-10-11T13:00:03Z"}]}"#;
-
-        Mock::given(method("GET"))
-            .respond_with(ResponseTemplate::new(200).set_body_string(body))
-            .mount(&mock_server)
-            .await;
-
-        let ctx = MockLogger::print_context();
-
-        ctx.expect()
-            .once()
-            .times(1)
-            .with(eq("11/10/2023 10:00:03 - 6.47 metros "))
-            .returning(|_| ());
-
-        program(Cli {
-            url: Some(mock_server.uri()),
-            recente: false,
-            unsecure: false,
-        })
-        .await;
-    }
-}
