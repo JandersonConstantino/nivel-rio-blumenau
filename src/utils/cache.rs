@@ -1,19 +1,25 @@
 use std::fs;
 
+use crate::core::Logger;
+
 const TEMPFILE: &str = "/tmp/nivel-rio-blumenau";
 
-pub fn save_cache_file(content: String) {
-    let _ = fs::write(TEMPFILE, content);
-}
+pub struct Cache;
 
-pub fn cache_file_exists() -> bool {
-    fs::read(TEMPFILE).is_ok()
-}
-
-pub fn get_cache_file() -> String {
-    if !cache_file_exists() {
-        panic!("Temp file not exists!");
+impl Cache {
+    pub fn save(content: String) {
+        let _ = fs::write(TEMPFILE, content);
     }
 
-    fs::read_to_string(TEMPFILE).unwrap()
+    pub fn exists() -> bool {
+        fs::read(TEMPFILE).is_ok()
+    }
+
+    pub fn get() -> String {
+        if !Cache::exists() {
+            Logger::panic("Temp file not exists!");
+        }
+
+        fs::read_to_string(TEMPFILE).unwrap()
+    }
 }

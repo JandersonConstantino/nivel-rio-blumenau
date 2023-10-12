@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::utils::{cache_file_exists, get_cache_file, save_cache_file};
+use crate::{core::Logger, utils::Cache};
 
 const URI: &str = "https://alertablu.blumenau.sc.gov.br/static/data/nivel_oficial.json";
 
@@ -31,7 +31,7 @@ pub async fn river_info_fetcher(unsecure: bool) -> Vec<NivelItem> {
     let result = match resp {
         Ok(res) => {
             let result = res.text().await.unwrap();
-            save_cache_file(result.clone());
+            Cache::save(result.clone());
 
             result
         }
@@ -39,19 +39,21 @@ pub async fn river_info_fetcher(unsecure: bool) -> Vec<NivelItem> {
             // TODO: should verify if has data in cache
             // when cache exists, should transform this message in a warning
             // else, should be a error em finish the routine.
-            print!("Erro ao tentar recuperar dados atualizados: {}", error);
+            Logger::print(&format!(
+                "Erro ao tentar recuperar dados atualizados: {}",
+                error
+            ));
 
-            match cache_file_exists() {
-                true => get_cache_file(),
+            match Cache::exists() {
+                true => Cache::get(),
                 _ => String::from(""),
             }
         }
     };
 
-    if !result.is_empty() {
-        let deserialized: RiverInfo = serde_json::from_str(&result).unwrap();
-        return deserialized.levels;
+    if result.is_empty() {
+        Logger::panic("Não foi possível exibir os dados no momento, tente novamente mais tarde.");
     }
 
-    panic!("Não foi possível exibir os dados no momento, tente novamente mais tarde.");
+    serde_json::from_str::<RiverInfo>(&result).unwrap().levels
 }

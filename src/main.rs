@@ -1,7 +1,9 @@
+mod core;
 mod services;
 mod utils;
 
 use clap::{command, Parser};
+use utils::DisplayRiverInfo;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -25,7 +27,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             let mut last_level: Option<f32> = None;
 
             data.into_iter().for_each(move |item| {
-                utils::display_river_info(&item, &last_level);
+                DisplayRiverInfo::display_river_info(&item, &last_level);
                 last_level = Some(item.level);
             });
         }
@@ -33,7 +35,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         _ => {
             if !data.is_empty() {
                 let item = &data[data.len() - 1];
-                utils::display_river_info(item, &None);
+                DisplayRiverInfo::display_river_info(item, &None);
             }
         }
     }
